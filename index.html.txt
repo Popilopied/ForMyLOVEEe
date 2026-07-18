@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прямо в сердце... ❤️</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@300;400;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <style>
+        .font-gothic { font-family: 'Cinzel', serif; }
+        .font-hand { font-family: 'Pinyon Script', cursive; }
+        .font-sans { font-family: 'Montserrat', sans-serif; }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(225, 29, 72, 0.4), inset 0 0 15px rgba(225, 29, 72, 0.2);
+            border: 1px solid rgba(225, 29, 72, 0.6);
+        }
+        .neon-text {
+            text-shadow: 0 0 10px rgba(225, 29, 72, 0.8), 0 0 20px rgba(225, 29, 72, 0.4);
+        }
+        
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(225, 29, 72, 0.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(225, 29, 72, 1); }
+        }
+        .seal-animation {
+            animation: pulse-slow 3s infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#0b090a] min-h-screen flex items-center justify-center font-sans p-4 overflow-x-hidden relative">
+
+    <!-- Задний план: Неоновые сердца -->
+    <canvas id="hearts-canvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- ЭКРАН 1: Печать -->
+    <div id="welcome-screen" class="z-10 text-center bg-black/80 backdrop-blur-md p-8 sm:p-12 rounded-3xl border border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.8)] max-w-md w-full transition-all duration-1000">
+        <div class="text-rose-500 font-hand text-5xl mb-2 opacity-90">Marked Men</div>
+        <div class="h-[1px] w-24 bg-rose-900 mx-auto my-4"></div>
+        
+        <h1 class="font-gothic text-xl tracking-[0.2em] text-stone-200 mb-6 uppercase">Секретное послание</h1>
+        
+        <button onclick="revealLove()" class="seal-animation relative w-24 h-24 bg-rose-600 rounded-full mx-auto my-8 flex items-center justify-center active:scale-95 transition-transform duration-300 cursor-pointer">
+            <span class="absolute text-4xl text-stone-100">❤️</span>
+        </button>
+        
+        <p class="text-stone-500 text-xs uppercase tracking-widest mt-4">Нажми на сердце, чтобы сорвать печать</p>
+    </div>
+
+    <!-- ЭКРАН 2: Главный блок -->
+    <div id="main-content" class="hidden opacity-0 transform translate-y-12 transition-all duration-[1200ms] z-10 max-w-2xl w-full bg-black/90 backdrop-blur-xl p-6 sm:p-10 rounded-3xl shadow-2xl neon-glow text-center my-6 relative">
+        
+        <h1 class="font-gothic text-3xl sm:text-4xl text-stone-100 tracking-wider mb-1 neon-text uppercase">19 ИЮЛЯ</h1>
+        <p class="text-rose-500 font-hand text-4xl sm:text-5xl mb-6">Happy Birthday, My Love</p>
+        
+        <div class="text-stone-300 text-sm sm:text-base leading-relaxed mb-8 space-y-4 font-light">
+            <p>
+                Любимая, с Днём Рождения! Ты — самое лучшее и прекрасное, что случилось в моей жизни. 
+                В фильме «Парни с тату» всё держится на безумной страсти и настоящих чувствах, которые меняют всё вокруг.
+            </p>
+            <p class="text-rose-400 font-semibold uppercase tracking-wider text-xs">
+                Я подарю тебе своё сердце... Прямо как в этом моменте:
+            </p>
+        </div>
+
+        <!-- Видеоплеер локального файла -->
+        <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(225,29,72,0.3)] border-2 border-stone-800 mb-8 bg-black">
+            <video id="my-video" class="w-full h-full object-cover" controls playsinline>
+                <source src="video.mp4" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        </div>
+
+        <p class="font-gothic text-lg text-stone-400 tracking-widest uppercase">
+            Навсегда твой.
+        </p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('hearts-canvas');
+        const ctx = canvas.getContext('2d');
+        let hearts = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Heart {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 8 + 4;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.sin(Math.random() * 2) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.fillStyle = '#e11d48';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#e11d48';
+                
+                const d = this.size;
+                ctx.moveTo(this.x, this.y + d / 4);
+                ctx.quadraticCurveTo(this.x, this.y, this.x + d / 2, this.y);
+                ctx.quadraticCurveTo(this.x + d, this.y, this.x + d, this.y + d / 3);
+                ctx.quadraticCurveTo(this.x + d, this.y + d * 2/3, this.x + d/2, this.y + d);
+                ctx.quadraticCurveTo(this.x, this.y + d * 2/3, this.x, this.y + d / 3);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30) {
+                    this.y = canvas.height + 30;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+        }
+
+        function initHearts() {
+            for (let i = 0; i < 40; i++) {
+                hearts.push(new Heart());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        initHearts();
+        animate();
+
+        function revealLove() {
+            const welcome = document.getElementById('welcome-screen');
+            const main = document.getElementById('main-content');
+            const video = document.getElementById('my-video');
+
+            welcome.classList.add('opacity-0', 'scale-90', 'translate-y-[-20px]');
+            
+            setTimeout(() => {
+                welcome.classList.add('hidden');
+                main.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    main.classList.remove('opacity-0', 'translate-y-12');
+                    main.classList.add('opacity-100', 'translate-y-0');
+                    
+                    video.play().catch(e => console.log("Видео ожидает нажатия"));
+                }, 50);
+            }, 800);
+        }
+    </script>
+</body>
+</html>
